@@ -127,6 +127,7 @@ assign(FilteredCollection.prototype, Events, {
         if (spec.filters) {
             spec.filters.forEach(this._addFilter, this);
         }
+        if (spec.resetOnFilter) this.resetOnFilter = spec.resetOnFilter;
     },
     // internal method registering new filter function
     _addFilter: function (filter) {
@@ -276,20 +277,24 @@ assign(FilteredCollection.prototype, Events, {
             this._resetIndexes(this._indexes);
         }
 
-        // now we've got our new models time to compare
-        toAdd = difference(newModels, existingModels);
-        toRemove = difference(existingModels, newModels);
-
         // save 'em
         this.models = newModels;
 
-        forEach(toRemove, bind(function (model) {
-            this.trigger('remove', model, this);
-        }, this));
+        if (this.resetOnFilter) {
+            this.trigger('reset', newModels, this);
+        } else {
+            // now we've got our new models time to compare
+            toAdd = difference(newModels, existingModels);
+            toRemove = difference(existingModels, newModels);
 
-        forEach(toAdd, bind(function (model) {
-            this.trigger('add', model, this);
-        }, this));
+            forEach(toRemove, bind(function (model) {
+                this.trigger('remove', model, this);
+            }, this));
+
+            forEach(toAdd, bind(function (model) {
+                this.trigger('add', model, this);
+            }, this));
+        }
 
         // unless we have the same models in same order trigger `sort`
         if (!isEqual(existingModels, newModels) && this.comparator) {

@@ -358,7 +358,9 @@ assign(FilteredCollection.prototype, Events, {
         }
 
         if (action !== 'ignore') {
-          this.trigger.apply(this, arguments);
+          if (this._indexedGet(model)) {
+            this.trigger.apply(this, arguments);
+          }
         }
 
         //If we were asked to sort, or we aren't gonna get a sort later and had a sortable property change

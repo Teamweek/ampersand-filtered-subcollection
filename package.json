@@ -1,5 +1,5 @@
 {
-  "name": "ampersand-filtered-subcollection",
+  "name": "@toggl-plan/ampersand-filtered-subcollection",
   "version": "3.1.0",
   "description": "Filterable, sortable, proxy of a collection that behaves like a collection.",
   "main": "ampersand-filtered-subcollection.js",
